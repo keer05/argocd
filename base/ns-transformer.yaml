@@ -2,7 +2,7 @@ apiVersion: builtin
 kind: NamespaceTransformer
 metadata:
   name: namespace-transformer
-  namespace: keerthana  # This will apply the "keerthana" namespace to all resources
+  namespace: keerthana
 fieldSpecs:
-  - path: metadata/namespace  # This specifies where to add/modify the namespace
-    create: true  # If the namespace field doesn't exist, it will be created
+  - path: metadata/namespace 
+    create: true  
