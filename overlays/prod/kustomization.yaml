@@ -1,8 +1,20 @@
-bases:
-  - ../../base
-patchesStrategicMerge:
-  - replica-patch.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base  # Reference to your base resources
+
+patches:
+  - path: replica-patch.yaml  # Merge any patches like replica counts
+    target:
+      kind: Deployment
+      name: my-app  # Ensure you have a valid target name here
+
 configMapGenerator:
   - name: app-config
     files:
       - values.yaml
+
+transformers:
+  - ns-transformer.yaml  # Ensure the correct namespace transformer is applied
+

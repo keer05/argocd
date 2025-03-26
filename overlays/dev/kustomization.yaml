@@ -6,4 +6,5 @@ configMapGenerator:
   - name: app-config
     files:
       - values.yaml
-
+transformers:
+  - ns-transformer.yaml

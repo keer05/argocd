@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: my-applicationset
+  namespace: argocd  # Namespace where ArgoCD is running
+spec:
+  generators:
+  - git:
+      directories:
+      - path: overlays/*  # Watch all directories under overlays (you can specify different paths as needed)
+      repoURL: https://github.com/keer05/argocd.git  # Git repository URL
+      revision: kusto  # The branch or commit to sync from
+  syncPolicy:
+    preserveResourcesOnDeletion: true  # Prevent deletion of resources when ApplicationSet is deleted
+  template:
+    metadata:
+      name: '{{path.basename}}'  # Application name based on the directory name
+    spec:
+      project: default  # ArgoCD project (can be modified)
+      source:
+        repoURL: https://github.com/keer05/argocd.git  # Git repository URL
+        targetRevision: kusto  # Branch or commit to sync from
+        path: '{{path}}'  # Dynamic path from the generator (from the directories under overlays/)
+        kustomize:
+          namePrefix: my-app-  # Prefix for all resources in the overlay
+      destination:
+        server: https://kubernetes.default.svc  # Default Kubernetes server
+        namespace: ''
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          prune: true  # Automatically delete resources no longer defined in Git
+          selfHeal: true  # Automatically correct drift from Git state
