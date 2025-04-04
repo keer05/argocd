@@ -1,0 +1,48 @@
+name: Promote Dev -> Prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Changed from self-hosted to ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: Checkout
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          cache: 'pip'
+      - name: Install dependencies  # Fixed spelling of 'dependencies'
+        run: |
+           pip install ruamel.yaml.string
+           pip install sde
+      - name: Get short SHA
+        id: vars
+        shell: bash
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Promote validator
+        env:
+          PCM_CONFIG_PATH: 'apps/testapp/overlays'
+          IMAGE_NAME: 'nginx'
+        run: python .github/scripts/.github/scripts/update_imagetag.py
+
+      - name: Promote scaler
+        env:
+          PCM_CONFIG_PATH: 'apps/testapp/overlays'
+          IMAGE_NAME: 'redis'
+        run: python .github/scripts/.github/scripts/update_imagetag.py
+      
+# Create the PR
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.G_TOKEN }}
+          branch: ci_cd-promotions
+          branch-suffix: short-commit-hash
+          title: "Promote Updates"
+          body: |
+              Promote Updates from Dev -> Prod
+              - Perfcontroller managed images
+              - CRD version
