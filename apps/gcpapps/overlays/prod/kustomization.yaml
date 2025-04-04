@@ -1,0 +1,8 @@
+resources:
+  - ../../base
+
+namePrefix: prod-
+namespace: prod
+
+patchesStrategicMerge:
+  - deployment-patch.yaml

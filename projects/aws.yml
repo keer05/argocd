@@ -1,9 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  annotations:
-    argocd.argoproj.io/sync-options: PruneLast=true
-    argocd.argoproj.io/sync-wave: "-2"
   labels:
     testapp: awsdev
   creationTimestamp: null
@@ -28,8 +25,6 @@ status: {}
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
   labels:
     testapp: awsdev
   creationTimestamp: null
@@ -52,24 +47,6 @@ spec:
           project: ""
           source:
             repoURL: ""
-  # - git:
-  #     files:
-  #     - path: apps/**/aws-canary/config_dir.json
-  #     repoURL: https://github.tools.sap/perfsizer/cicd.git
-  #     requeueAfterSeconds: 20
-  #     revision: ""
-  #     template:
-  #       metadata: {}
-  #       spec:
-  #         destination: {}
-  #         project: ""
-  #         source:
-  #           directory:
-  #             exclude: '{{ exclude }}'
-  #             include: '{{ include }}'
-  #             jsonnet: {}
-  #             recurse: true
-  #           repoURL: ""
   template:
     metadata:
       name: aws-{{ userGivenName }}
@@ -83,7 +60,7 @@ spec:
         jsonPointers:
         - /status
         kind: Application
-      project: aws-canary
+      project: awsdev
       source:
         plugin: {}
         path: '{{ srcPath }}'

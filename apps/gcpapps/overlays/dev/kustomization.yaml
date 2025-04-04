@@ -1,0 +1,8 @@
+resources:
+- ../../base
+
+namePrefix: dev-
+namespace: keerthana
+
+patchesStrategicMerge:
+- deployment-patch.yaml

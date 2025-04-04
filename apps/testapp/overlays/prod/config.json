@@ -3,7 +3,7 @@
     "userGivenName": "awsprod",
     "destNamespace": "keerthana",
     "destServer": "https://kubernetes.default.svc",
-    "srcPath": "apps/testapp/overlays/prod/",
+    "srcPath": "apps/gcpapps/overlays/prod/",
     "srcRepoURL": "https://github.com/keer05/argocd.git",
     "srcTargetRevision": "",
     "labels": null,
