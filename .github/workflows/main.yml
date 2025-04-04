@@ -33,7 +33,7 @@ jobs:
         env:
           PCM_CONFIG_PATH: 'apps/testapp/overlays'
           IMAGE_NAME: 'redis'
-        run: python .github/scripts/.github/scripts/update_imagetag.py
+        run: python .github/scripts/update_imagetag.py
       
 # Create the PR 
       - name: Create Pull Request
