@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  config: |
+    images:
+      nginx: "nginx:latest"
+      redis: "redis:latest"
+kind: ConfigMap
+metadata:
+  name: test-cm-prod

@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: PruneLast=true
+    argocd.argoproj.io/sync-wave: "-2"
+  labels:
+    testapp: awsdev
+  creationTimestamp: null
+  name: awsdev
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  description: aws project
+  destinations:
+  - namespace: '*'
+    server: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  sourceRepos:
+  - '*'
+status: {}
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  labels:
+    testapp: awsdev
+  creationTimestamp: null
+  name: awsdev
+  namespace: argocd
+spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: true
+  generators:
+  - git:
+      files:
+      - path: aapps/**/config.json
+      repoURL: https://github.com/keer05/argocd.git
+      requeueAfterSeconds: 20
+      revision: ""
+      template:
+        metadata: {}
+        spec:
+          destination: {}
+          project: ""
+          source:
+            repoURL: ""
+  # - git:
+  #     files:
+  #     - path: apps/**/aws-canary/config_dir.json
+  #     repoURL: https://github.tools.sap/perfsizer/cicd.git
+  #     requeueAfterSeconds: 20
+  #     revision: ""
+  #     template:
+  #       metadata: {}
+  #       spec:
+  #         destination: {}
+  #         project: ""
+  #         source:
+  #           directory:
+  #             exclude: '{{ exclude }}'
+  #             include: '{{ include }}'
+  #             jsonnet: {}
+  #             recurse: true
+  #           repoURL: ""
+  template:
+    metadata:
+      name: aws-{{ userGivenName }}
+      namespace: argocd
+    spec:
+      destination:
+        namespace: '{{ destNamespace }}'
+        server: '{{ destServer }}'
+      ignoreDifferences:
+      - group: argoproj.io
+        jsonPointers:
+        - /status
+        kind: Application
+      project: aws-canary
+      source:
+        plugin: {}
+        path: '{{ srcPath }}'
+        repoURL: '{{ srcRepoURL }}'
+        targetRevision: '{{ srcTargetRevision }}'
+      syncPolicy:
+        automated:
+          allowEmpty: true
+          prune: false
+          selfHeal: true
+status: {}
