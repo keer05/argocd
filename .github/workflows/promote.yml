@@ -1,10 +1,11 @@
-name: Promote Dev -> Prod 
+name: Promote Dev -> Prod
 
 on:
   workflow_dispatch:
+
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest  # Changed from self-hosted to ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         name: Checkout
@@ -12,7 +13,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           cache: 'pip'
-      - name: Install dependancy
+      - name: Install dependencies  # Fixed spelling of 'dependencies'
         run: |
            pip install ruamel.yaml.string
            pip install sde
@@ -33,7 +34,7 @@ jobs:
           IMAGE_NAME: 'redis'
         run: python .github/scripts/.github/scripts/update_imagetag.py
       
-# Create the PR 
+# Create the PR
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
@@ -45,6 +46,3 @@ jobs:
               Promote Updates from Dev -> Prod
               - Perfcontroller managed images
               - CRD version
-      
-        
-  
